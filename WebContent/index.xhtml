@@ -1,0 +1,96 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta charset="UTF-8" />
+	<h:outputStylesheet  name="style.css"  library="css" />
+</h:head>
+<h:body styleClass="background">
+<center>
+<h:graphicImage styleClass="imageSenai" library="images" name="SENAI-SP.jpg"/>
+<h:panelGrid styleClass="painelLogin">
+	<h:form>
+		<p:growl >
+			<p:autoUpdate/>
+		</p:growl>
+		<p:toolbar>
+			<f:facet name="left">
+				<h:outputText value="Insira seus dados de login"/>
+			</f:facet>
+		</p:toolbar>
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Insira seu nome ou CPF"/>
+			<p:inputText required="true" value="#{loginMBean.nomeOUcpf}" requiredMessage="Nome ou CPF obrigatório !"/>
+		
+			
+			<p:outputLabel value="Insira sua senha"/>
+			<p:password required="true" value="#{loginMBean.senha}" requiredMessage="Senha obrigatoria !"/>
+		</p:panelGrid >
+		<br/><br/><br/><br/>
+		
+		<center>
+			<p:commandButton value="Fazer login"  action="#{loginMBean.doLogin()}"/><br/>
+		</center>
+	</h:form>
+	<h:form>
+		<center>
+			<p:commandButton value="Criar Usuario" action="cadastro?faces-redirect=true"/>
+		</center>
+	</h:form>
+	
+	<h:panelGroup>
+		<center>
+			<p:commandButton value="Esqueci minha senha !!!" type="button" onclick="PF('dlg6').show();"/>
+		</center>
+	</h:panelGroup>
+	
+	<p:dialog header="Insira seu CPF para recuperação de senha: " widgetVar="dlg6" width="50%" maximizable="true">	
+		<center>
+			<h:panelGroup>	
+				<h:form >	
+					<br/>
+					<p:outputLabel value="Insira somente seu CPF: "/>
+					<p:inputMask
+						
+								required="true"
+								requiredMessage="Insira seu CPF."
+								placeholder="CPF" 
+								value="#{loginMBean.cpfRecuperacao}" 
+								mask="999.999.999-99" 
+								size="40"/>	
+								
+					<br/>						<br/>						
+										
+					<p:commandButton value="Enviar código de recuperação" actionListener="#{loginMBean.gerarRecuperacaoSenha()}"/>
+				</h:form>
+				<p:commandButton value="Tenho um código" type="button" onclick="PF('dlg7').show();"/>
+			</h:panelGroup>
+		</center>
+	</p:dialog>
+	
+	<p:dialog header="Insira seu código e a nova senha a ser utilizada: " widgetVar="dlg7" width="50%" maximizable="true">	
+		<center>
+			<h:panelGroup>	
+				<h:form >	
+					<p:outputLabel value="Insira o código enviado por e-mail: "/>
+					<p:inputText required="true" value="#{loginMBean.codigoRecDigitado}" requiredMessage="Insira o código enviado por e-mail !"/>
+					<br/><br/>
+					<p:outputLabel value="Insira a nova senha: "/>
+					<p:password required="true" value="#{loginMBean.senhaRec1Digitado}" requiredMessage="Insira a nova senha !"/>
+					<br/><br/>
+					<p:outputLabel value="Repita a nova senha: "/>
+					<p:password required="true" value="#{loginMBean.senhaRec2Digitado}" requiredMessage="Insira novamente a nova senha !"/>
+					<br/><br/>
+					<p:commandButton value="Alterar senha " actionListener="#{loginMBean.alterarSenhaRec()}"/>
+				</h:form>
+			</h:panelGroup>
+		</center>
+	</p:dialog>
+	
+	
+</h:panelGrid>
+</center>
+</h:body>
+</html>

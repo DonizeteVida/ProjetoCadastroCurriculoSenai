@@ -1,0 +1,136 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta charset="UTF-8" />
+	<h:outputStylesheet  name="style.css"  library="css" />
+</h:head>
+<h:body styleClass="background">
+<center >
+		<p:growl>
+			<p:autoUpdate />		
+		</p:growl>			
+		<h:form rendered="#{loginMBean.logadoSENAI}">
+			<p:selectOneMenu  style="width:250px"
+				value="#{senaiMBean.tipoDeSelecao}">
+				<f:selectItem itemValue="0" itemLabel="Busca geral"/>
+				<f:selectItem itemValue="1" itemLabel="Busca por nome"/>
+				<f:selectItem itemValue="2" itemLabel="Busca por curso" />
+				<f:selectItem itemValue="3" itemLabel="Busca por palavra chave" />
+				<p:ajax event="change"
+					update="listaDropDown"
+					listener="#{senaiMBean.busca()}" />
+			</p:selectOneMenu>
+			<p:autoComplete id="listaDropDown" value="#{senaiMBean.selecao}" dropdown="true" completeMethod="#{senaiMBean.listaDropDown()}"/>
+			<p:commandButton ajax="true" event="click" update=":form:dtAlunos" action="#{senaiMBean.busca()}" value="Busca"/>
+		</h:form>
+		
+		<h:form id="form" rendered="#{loginMBean.logadoSENAI}">
+		<p:dataTable rendered="#{loginMBean.logadoSENAI}" id="dtAlunos" style="width:95%" selectionMode="single" selection="#{senaiMBean.alunoSelecionado}" 
+			rowKey="#{aluno.codigo}"
+			value="#{senaiMBean.listaAtual}" var="aluno">
+			
+			<p:ajax event="rowSelect" listener="#{senaiMBean.onRowSelect}" update=":form:btPDF, editarAluno"/>
+			<p:ajax event="rowUnselect" listener="#{senaiMBean.onRowUnselect}" update=":form:btPDF"/>
+			
+			
+			<f:facet name="header">Alunos cadastrados</f:facet>	
+			<p:column style="width:3%">
+				<f:facet name="header">ID</f:facet>
+				#{aluno.codigo}
+			</p:column>
+			<p:column>
+				<f:facet name="header">CPF</f:facet>
+				#{aluno.cpf}
+			</p:column>
+			<p:column>
+				<f:facet name="header">Nome</f:facet>
+				#{aluno.nome}
+			</p:column>
+			<p:column>
+				<f:facet name="header">Data nascimento</f:facet>
+				#{senaiMBean.mostraData(aluno)}
+			</p:column>
+			<p:column>
+				<f:facet name="header">Curso</f:facet>
+				#{aluno.curso.nome}
+			</p:column>
+			<p:column style="width:7%">
+				<f:facet name="header">Turma</f:facet>
+				#{aluno.turma}
+			</p:column>
+			<p:column style="width:3%">
+				<f:facet name="header">A/I</f:facet>
+				#{aluno.situacao}
+			</p:column>
+			<p:column>
+				<f:facet name="header">E-mail</f:facet>
+				#{aluno.email}
+			</p:column>
+			<p:column>
+				<f:facet name="header">Palavras chave</f:facet>
+				#{senaiMBean.palavraDao.listaPorAluno(aluno)}
+			</p:column>
+		</p:dataTable>
+			<br/>
+			
+	        	<p:commandButton id="btPDF" disabled="#{!senaiMBean.renderPDF}" style="width:50%" value="Baixar" ajax="false" actionListener="#{senaiMBean.doDownload}">
+	  				<p:fileDownload rendered="#{loginMBean.logadoSENAI}" value="#{senaiMBean.streamedContent}"/>
+				</p:commandButton>
+
+        </h:form> 
+        
+        <h:panelGroup>
+			<center>
+				<p:commandButton rendered="#{loginMBean.logadoSENAI}" ajax="true" event="onclick" value="Editar aluno" type="button" onclick="PF('dlg1').show();"/>
+			</center>
+		</h:panelGroup>
+		
+		<p:dialog id="editarAluno" header="Editar usuario: " widgetVar="dlg1" width="50%" maximizable="true">	
+		<center>
+			<h:panelGroup >	
+				<h:form >
+					<p:panelGrid columns="2">	
+						<p:outputLabel value="E-mail do aluno: "/>				
+						<p:inputText 
+							required="true"
+							requiredMessage="E-mail do aluno: ."
+							value="#{senaiMBean.alunoSelecionado.email}"
+							placeholder="Nome"
+							size="40" />	
+							
+						
+						<p:outputLabel value="Situação do aluno: "/>	
+						<p:selectOneMenu  style="width:250px"
+							value="#{senaiMBean.alunoSelecionado.situacao}">
+							<f:selectItem itemValue="" itemLabel="Selecione a situação: " />
+							<f:selectItem itemValue="A" itemLabel="Ativo" />
+							<f:selectItem itemValue="I" itemLabel="Inativo" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Senha do aluno: "/>
+						<p:inputText
+							required="true"
+							requiredMessage="Insira a senha."
+							value="#{senaiMBean.alunoSelecionado.senha}"
+							placeholder="Turma"
+							size="40" />
+							
+					</p:panelGrid>
+					<p:commandButton value="Salvar" ajax="true" event="onclick" update="form" actionListener="#{senaiMBean.updateAluno()}"/>
+				</h:form>
+			</h:panelGroup>
+		</center>
+	</p:dialog>
+        
+      
+</center>
+
+	<h:panelGroup styleClass="mensagem" rendered="#{!loginMBean.logadoSENAI}">
+		<p:outputLabel value="Você não está logado, será redirecionado em alguns segundos."/>
+		<meta http-equiv="refresh" content="2; url=index.xhtml"/>
+	</h:panelGroup>
+</h:body>
+</html>

@@ -1,0 +1,33 @@
+@charset "ISO-8859-1";
+
+.imageSenai{
+	width: 50%;
+	height: 25%;
+	/*background-image:url(#{request.contextPath}/resources/images/SENAI-SP.jpg);*/
+}
+
+.background{
+	background-image:url(#{request.contextPath}/resources/images/background.png);
+}
+
+.centralizar{
+	position: absolute;
+	top: 10%;
+	left: 25%;
+}
+
+.mensagem{
+	width: 50%;
+	height: 50%;
+	position: absolute;
+	left: 25%;
+	text-align: center;
+	background-color: white;
+	box-shadow: 5px 5px;
+}
+
+.divCor{
+	position: absolute;
+	z-index: 999999999999999999999999999;
+	background-color: #FFFFFF;
+}

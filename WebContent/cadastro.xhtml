@@ -1,0 +1,104 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta charset="UTF-8" />
+	<h:outputStylesheet library="css" name="style.css" />
+</h:head>
+<h:body styleClass="background">
+<center>
+<h:panelGrid >
+	<h:form>
+	
+	<p:growl>
+		<p:autoUpdate />		
+	</p:growl>
+	
+	<p:toolbar>
+		<f:facet name="left">
+			<h:outputText value="Insira seus dados pessoais"/>
+		</f:facet>
+	</p:toolbar>
+	<p:panelGrid columns="1">
+		<p:inputMask id="campoCPF"
+			required="true"
+			requiredMessage="Insira seu CPF."
+			placeholder="CPF" 
+			value="#{cadastroMBean.aluno.cpf}" 
+			mask="999.999.999-99" 
+			size="40"/>
+			
+		<p:inputText 
+			required="true"
+			requiredMessage="Insira seu nome."
+			value="#{cadastroMBean.aluno.nome}"
+			placeholder="Nome"
+			size="40" />	
+			
+		<p:calendar 
+			required="true"
+			requiredMessage="Insira sua data de nascimento."
+			value="#{cadastroMBean.aluno.data_nasc.time}"
+			showOn="button" 
+			mask="true" 
+			navigator="true"
+			pattern="dd-MM-yyyy" />
+			
+		<p:selectOneMenu  style="width:250px"
+			value="#{cadastroMBean.aluno.curso.codigo}">
+			<f:selectItem itemValue="0" itemLabel="Selecione seu curso" />
+			<f:selectItems value="#{cadastroMBean.listaCurso}"
+				var="curso"
+				itemValue="#{curso.codigo}"
+				itemLabel="#{curso.nome}" />
+		</p:selectOneMenu>
+		
+		<p:inputText 
+			required="true"
+			requiredMessage="Insira sua turma."
+			value="#{cadastroMBean.aluno.turma}"
+			placeholder="Turma"
+			size="40" />
+			
+		<p:password
+			required="true"
+			requiredMessage="Insira uma senha."
+			value="#{cadastroMBean.aluno.senha}"
+			placeholder="Insira a senha."
+			size="40" />	
+			
+			
+		<p:password
+			required="true"
+			requiredMessage="Insira a confirmacao da senha."
+			value="#{cadastroMBean.senhaCorreta}"
+			placeholder="Repita a senha."
+			size="40" />
+			
+		<p:inputText 
+			required="true"
+			requiredMessage="Insira seu e-mail."
+			value="#{cadastroMBean.aluno.email}"
+			placeholder="Email"
+			size="40" />
+			
+	</p:panelGrid>
+	
+		<p:toolbar>
+			<f:facet name="right">
+				<p:commandButton
+					value="Salvar"
+					onsubmit="testaCPF()"
+					icon="ui-icon-disk"
+					action="#{cadastroMBean.salvarAluno()}"/>
+			</f:facet>
+		</p:toolbar>
+		
+	</h:form>
+</h:panelGrid>
+</center>
+<h:outputScript name="javascript.js" library="js" />
+</h:body>
+</html>
